@@ -1,0 +1,482 @@
+<title>QrCodeStudio Datenschutz</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,500;8..60,600;8..60,700&family=Open+Sans:wght@400;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<style>
+  :root{
+    --bg:#F5F7FA; --surface:#FFFFFF; --surface-2:#EFF3F7;
+    --text:#1E293B; --text-muted:#57667A; --text-faint:#8695A8;
+    --accent:#0B6E99; --accent-ink:#FFFFFF; --border:#DCE4EE;
+    --code-bg:#EEF3F7;
+    --serif:"Source Serif 4",Georgia,"Times New Roman",serif;
+    --sans:"Open Sans","Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    --mono:"IBM Plex Mono","SFMono-Regular",Consolas,monospace;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#0F172A; --surface:#1A202A; --surface-2:#212B39;
+      --text:#F1F5F9; --text-muted:#9AACC2; --text-faint:#64768C;
+      --accent:#5FD0FF; --accent-ink:#0B1420; --border:#2C3A4C;
+      --code-bg:#17212F;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#0F172A; --surface:#1A202A; --surface-2:#212B39;
+    --text:#F1F5F9; --text-muted:#9AACC2; --text-faint:#64768C;
+    --accent:#5FD0FF; --accent-ink:#0B1420; --border:#2C3A4C;
+    --code-bg:#17212F;
+  }
+
+  *{box-sizing:border-box;}
+  body{
+    background:var(--bg); color:var(--text); font-family:var(--sans);
+    margin:0; padding-inline:20px; padding-block:32px; line-height:1.6;
+  }
+  a{color:var(--accent);}
+  [hidden]{display:none!important;}
+
+  .wrap{max-width:720px; margin:0 auto;}
+
+  header.masthead{
+    display:flex; align-items:center; gap:14px; margin-bottom:8px;
+  }
+  .mark{
+    width:44px; height:44px; border-radius:12px; background:var(--accent);
+    color:var(--accent-ink); display:flex; align-items:center; justify-content:center;
+    font-family:var(--serif); font-weight:700; font-size:20px; flex:none;
+  }
+  .masthead h1{
+    font-family:var(--serif); font-weight:600; font-size:1.5rem; margin:0;
+    letter-spacing:.2px;
+  }
+  .masthead .sub{color:var(--text-muted); font-size:.85rem; margin-top:2px;}
+
+  .meta-row{
+    display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between;
+    gap:10px; margin:22px 0 28px; padding:12px 16px; background:var(--surface);
+    border:1px solid var(--border); border-radius:12px;
+  }
+  .stamp{font-family:var(--mono); font-size:.72rem; color:var(--text-faint); letter-spacing:.02em;}
+  .langswitch{display:flex; gap:2px; background:var(--surface-2); padding:3px; border-radius:8px;}
+  .langswitch button{
+    font-family:var(--sans); font-size:.78rem; font-weight:600; border:0; cursor:pointer;
+    padding:5px 12px; border-radius:6px; background:transparent; color:var(--text-muted);
+  }
+  .langswitch button[aria-pressed="true"]{background:var(--accent); color:var(--accent-ink);}
+
+  .draftnote{
+    font-size:.82rem; color:var(--text-muted); background:var(--surface-2);
+    border-left:3px solid var(--accent); padding:10px 14px; border-radius:0 8px 8px 0;
+    margin-bottom:26px;
+  }
+
+  nav.toc{
+    background:var(--surface); border:1px solid var(--border); border-radius:12px;
+    padding:16px 18px; margin-bottom:32px;
+  }
+  nav.toc .toc-title{font-size:.72rem; text-transform:uppercase; letter-spacing:.08em; color:var(--text-faint); margin-bottom:8px; font-weight:700;}
+  nav.toc ol{margin:0; padding-left:1.3em; columns:2; column-gap:20px; font-size:.86rem;}
+  nav.toc li{margin-bottom:4px; break-inside:avoid;}
+  nav.toc a{color:var(--text); text-decoration:none;}
+  nav.toc a:hover{color:var(--accent); text-decoration:underline;}
+  @media (max-width:480px){ nav.toc ol{columns:1;} }
+
+  section.card{
+    background:var(--surface); border:1px solid var(--border); border-radius:14px;
+    padding:22px 24px; margin-bottom:16px;
+  }
+  section.card h2{
+    font-family:var(--serif); font-size:1.15rem; font-weight:600; margin:0 0 12px;
+    display:flex; gap:10px; align-items:baseline;
+  }
+  section.card h2 .num{
+    font-family:var(--mono); font-size:.8rem; color:var(--accent); font-weight:700;
+  }
+  section.card h3{font-size:.95rem; margin:16px 0 6px; font-weight:700;}
+  section.card p{margin:0 0 12px; color:var(--text);}
+  section.card p:last-child{margin-bottom:0;}
+  section.card ul{margin:0 0 12px; padding-left:1.3em;}
+  section.card li{margin-bottom:6px;}
+  section.card .muted{color:var(--text-muted); font-size:.88rem;}
+
+  table.contact{width:100%; border-collapse:collapse; font-size:.92rem;}
+  table.contact td{padding:6px 0; vertical-align:top;}
+  table.contact td:first-child{color:var(--text-muted); width:38%; padding-right:10px;}
+  table.contact td:last-child{font-family:var(--mono); font-size:.88rem;}
+
+  .pill{
+    display:inline-block; font-family:var(--mono); font-size:.72rem; font-weight:600;
+    padding:2px 9px; border-radius:999px; background:var(--code-bg); color:var(--accent);
+    letter-spacing:.02em; margin-right:6px;
+  }
+
+  footer{
+    text-align:center; color:var(--text-faint); font-size:.78rem; margin-top:36px;
+    padding-top:18px; border-top:1px solid var(--border);
+  }
+  footer a{color:var(--text-faint);}
+</style>
+
+<div class="wrap">
+
+  <header class="masthead">
+    <div class="mark">Qr</div>
+    <div>
+      <h1 id="page-title">Datenschutzerklärung</h1>
+      <div class="sub" id="page-sub">QrCodeStudio – App von IT Westfalen Akademie</div>
+    </div>
+  </header>
+
+  <div class="meta-row">
+    <span class="stamp" id="stampText">STAND: 22.09.2026 · ENTWURF</span>
+    <div class="langswitch" role="group" aria-label="Sprache">
+      <button type="button" id="btnDe" aria-pressed="true">Deutsch</button>
+      <button type="button" id="btnEn" aria-pressed="false">English</button>
+    </div>
+  </div>
+
+  <div class="draftnote" id="draftNoteDe">
+    <strong>Hinweis:</strong> Dies ist ein Entwurf, den QrCodeStudio zur Prüfung erhalten hat. Vor
+    der Verlinkung in Google Play Console/Store-Listing bitte Inhalte (insbesondere Anbieterdaten
+    und Aufsichtsbehörde) gegenprüfen.
+  </div>
+  <div class="draftnote" id="draftNoteEn" hidden>
+    <strong>Note:</strong> This is a draft prepared for QrCodeStudio's review. Please verify the
+    details (especially provider data and the supervisory authority) before linking it from Google
+    Play Console / the Store listing.
+  </div>
+
+  <!-- ============================== DEUTSCH ============================== -->
+  <div id="de">
+
+    <nav class="toc" aria-label="Inhaltsverzeichnis">
+      <div class="toc-title">Inhalt</div>
+      <ol>
+        <li><a href="#de-1">Verantwortlicher</a></li>
+        <li><a href="#de-2">Überblick: welche Daten verarbeitet die App?</a></li>
+        <li><a href="#de-3">Kamera &amp; Barcode-/QR-Code-Scan</a></li>
+        <li><a href="#de-4">Erzeugte Barcodes &amp; lokale Speicherung</a></li>
+        <li><a href="#de-5">Sprache &amp; Darstellung</a></li>
+        <li><a href="#de-6">Internetzugriff</a></li>
+        <li><a href="#de-7">Google Play Billing (Käufe)</a></li>
+        <li><a href="#de-8">Keine Weitergabe, kein Tracking</a></li>
+        <li><a href="#de-9">Deine Rechte</a></li>
+        <li><a href="#de-10">Beschwerderecht</a></li>
+        <li><a href="#de-11">Änderungen dieser Erklärung</a></li>
+        <li><a href="#de-impressum">Impressum</a></li>
+      </ol>
+    </nav>
+
+    <section class="card" id="de-1">
+      <h2><span class="num">01</span> Verantwortlicher</h2>
+      <p>Verantwortlich für die Datenverarbeitung im Sinne der Datenschutz-Grundverordnung (DSGVO) ist:</p>
+      <table class="contact">
+        <tr><td>Anbieter</td><td>IT Westfalen Akademie</td></tr>
+        <tr><td>Anschrift</td><td>Paschestraße 16, 58089 Hagen, Deutschland</td></tr>
+        <tr><td>Ansprechpartner</td><td>Azlan Ainto</td></tr>
+        <tr><td>E-Mail</td><td>azlanainto64bit@outlook.de</td></tr>
+        <tr><td>Telefon</td><td>01782556210</td></tr>
+      </table>
+    </section>
+
+    <section class="card" id="de-2">
+      <h2><span class="num">02</span> Überblick: welche Daten verarbeitet die App?</h2>
+      <p>QrCodeStudio ist bewusst so gebaut, dass so wenig Daten wie möglich anfallen:
+      <strong>gescannte und erzeugte Barcode-Inhalte verlassen dein Gerät nicht</strong> und werden
+      nicht an einen Server der IT Westfalen Akademie übertragen. Die App betreibt keinen eigenen
+      Backend-Server. Datenverarbeitung findet in den folgenden, klar abgegrenzten Fällen statt:</p>
+      <ul>
+        <li>lokal auf deinem Gerät (Kamera-Bildanalyse, Spracheinstellung, Darstellung),</li>
+        <li>direkt zwischen deinem Gerät und der von dir aktiv geöffneten Ziel-Webseite (Download-Funktion),</li>
+        <li>zwischen deinem Gerät und Google (In-App-Käufe über Google Play Billing).</li>
+      </ul>
+    </section>
+
+    <section class="card" id="de-3">
+      <h2><span class="num">03</span> Kamera &amp; Barcode-/QR-Code-Scan</h2>
+      <p><span class="pill">lokal</span> Für das Scannen von QR-Codes und Barcodes benötigt die App
+      Zugriff auf die Kamera (Android-Berechtigung <code>CAMERA</code>). Die Kamera-Bildströme werden
+      ausschließlich auf deinem Gerät in Echtzeit auf enthaltene Codes analysiert. Es werden dabei
+      <strong>keine Kamerabilder gespeichert, verändert oder an die IT Westfalen Akademie
+      übertragen</strong>. Falls ein gescannter Code selbst personenbezogene Daten enthält (z. B. eine
+      digitale Visitenkarte), verbleiben auch diese Daten allein auf deinem Gerät, bis du selbst eine
+      Aktion damit auslöst (z. B. Kontakt speichern, Link öffnen).</p>
+      <p class="muted">Ohne Kamera-Berechtigung funktioniert weiterhin die Funktion „Bild auswählen“
+      zum Einlesen eines Codes aus einer vorhandenen Bilddatei.</p>
+    </section>
+
+    <section class="card" id="de-4">
+      <h2><span class="num">04</span> Erzeugte Barcodes &amp; lokale Speicherung</h2>
+      <p><span class="pill">lokal</span> Von dir erstellte Barcodes/QR-Codes werden – nur auf deinen
+      ausdrücklichen Wunsch – im öffentlichen Bilder-Ordner deines Geräts gespeichert (Unterordner
+      „QrCodeStudio“) oder über die native Teilen-Funktion deines Betriebssystems weitergegeben. Beides
+      geschieht ausschließlich durch deine eigene Aktion und ohne Beteiligung eines Servers der IT
+      Westfalen Akademie.</p>
+    </section>
+
+    <section class="card" id="de-5">
+      <h2><span class="num">05</span> Sprache &amp; Darstellung</h2>
+      <p><span class="pill">lokal</span> Deine gewählte Anzeigesprache und die Darstellung
+      (hell/dunkel/System) werden ausschließlich lokal auf deinem Gerät gespeichert (Android
+      Preferences) und nicht übertragen.</p>
+    </section>
+
+    <section class="card" id="de-6">
+      <h2><span class="num">06</span> Internetzugriff</h2>
+      <p><span class="pill">gerätedirekt</span> Enthält ein gescannter Code einen Link, ein Dokument
+      oder strukturierte Daten und du entscheidest dich aktiv, diese zu öffnen oder herunterzuladen,
+      baut die App eine direkte, verschlüsselte (HTTPS) Verbindung <strong>zwischen deinem Gerät und
+      dem jeweiligen Anbieter dieser Adresse</strong> auf – nicht zu einem Server der IT Westfalen
+      Akademie. Welche Daten dabei anfallen, bestimmt der Betreiber der aufgerufenen Adresse; dessen
+      eigene Datenschutzerklärung ist maßgeblich. Öffne unbekannte Links, Dateien oder
+      WLAN-Vorschläge nur, wenn du der Quelle des Codes vertraust.</p>
+    </section>
+
+    <section class="card" id="de-7">
+      <h2><span class="num">07</span> Google Play Billing (In-App-Käufe)</h2>
+      <p><span class="pill">Google</span> Der Kauf der Vollversion erfolgt über Google Play Billing.
+      Zahlungsdaten (z. B. Zahlungsmittel, Rechnungsanschrift) werden ausschließlich von Google
+      verarbeitet; die IT Westfalen Akademie erhält und speichert diese Daten zu keinem Zeitpunkt. Google
+      übermittelt der App lediglich den Kaufstatus (aktiv/nicht aktiv), um die Vollversion
+      freizuschalten. Es gilt zusätzlich die Datenschutzerklärung von Google:
+      <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">policies.google.com/privacy</a>.</p>
+    </section>
+
+    <section class="card" id="de-8">
+      <h2><span class="num">08</span> Keine Weitergabe an Dritte, kein Tracking</h2>
+      <p>Die App enthält aktuell <strong>keine Analyse-, Tracking- oder Werbe-SDKs</strong> und
+      übermittelt keine Nutzungsdaten an Dritte. Sollte sich das künftig ändern (z. B. durch die
+      Einführung einer Absturzbericht-Funktion), wird diese Erklärung vorab aktualisiert und der
+      Google-Play-Datensicherheitsbereich entsprechend angepasst.</p>
+    </section>
+
+    <section class="card" id="de-9">
+      <h2><span class="num">09</span> Deine Rechte</h2>
+      <p>Soweit personenbezogene Daten verarbeitet werden, hast du nach der DSGVO insbesondere das
+      Recht auf:</p>
+      <ul>
+        <li>Auskunft über die zu deiner Person gespeicherten Daten (Art. 15 DSGVO),</li>
+        <li>Berichtigung unrichtiger Daten (Art. 16 DSGVO),</li>
+        <li>Löschung (Art. 17 DSGVO) und Einschränkung der Verarbeitung (Art. 18 DSGVO),</li>
+        <li>Datenübertragbarkeit (Art. 20 DSGVO),</li>
+        <li>Widerspruch gegen die Verarbeitung (Art. 21 DSGVO).</li>
+      </ul>
+      <p>Da die App selbst keine personenbezogenen Daten an die IT Westfalen Akademie überträgt oder
+      dort speichert, laufen diese Rechte in der Praxis meist ins Leere; für Anfragen zu Google Play
+      Billing wende dich zusätzlich an Google.</p>
+    </section>
+
+    <section class="card" id="de-10">
+      <h2><span class="num">10</span> Beschwerderecht bei einer Aufsichtsbehörde</h2>
+      <p>Du hast das Recht, dich bei einer Datenschutz-Aufsichtsbehörde zu beschweren. Zuständig für
+      den Sitz des Anbieters (Hagen, Nordrhein-Westfalen) ist:</p>
+      <table class="contact">
+        <tr><td>Behörde</td><td>Landesbeauftragte für Datenschutz und Informationsfreiheit Nordrhein-Westfalen (LDI NRW)</td></tr>
+        <tr><td>Anschrift</td><td>Kavalleriestraße 2–4, 40213 Düsseldorf</td></tr>
+        <tr><td>Web</td><td>www.ldi.nrw.de</td></tr>
+      </table>
+    </section>
+
+    <section class="card" id="de-11">
+      <h2><span class="num">11</span> Änderungen dieser Erklärung</h2>
+      <p>Diese Datenschutzerklärung wird bei Bedarf angepasst, wenn sich die App oder die
+      rechtlichen Anforderungen ändern. Es gilt jeweils die zuletzt hier veröffentlichte Fassung.</p>
+    </section>
+
+    <section class="card" id="de-impressum">
+      <h2><span class="num">§5</span> Impressum</h2>
+      <p class="muted">Angaben gemäß § 5 Digitale-Dienste-Gesetz (DDG)</p>
+      <table class="contact">
+        <tr><td>Anbieter</td><td>IT Westfalen Akademie</td></tr>
+        <tr><td>Anschrift</td><td>Paschestraße 16, 58089 Hagen, Deutschland</td></tr>
+        <tr><td>Vertreten durch</td><td>Azlan Ainto</td></tr>
+        <tr><td>E-Mail</td><td>azlanainto64bit@outlook.de</td></tr>
+        <tr><td>Telefon</td><td>01782556210</td></tr>
+      </table>
+    </section>
+
+  </div>
+
+  <!-- ============================== ENGLISH ============================== -->
+  <div id="en" hidden>
+
+    <nav class="toc" aria-label="Table of contents">
+      <div class="toc-title">Contents</div>
+      <ol>
+        <li><a href="#en-1">Controller</a></li>
+        <li><a href="#en-2">Overview: what data does the app process?</a></li>
+        <li><a href="#en-3">Camera &amp; barcode/QR scanning</a></li>
+        <li><a href="#en-4">Generated barcodes &amp; local storage</a></li>
+        <li><a href="#en-5">Language &amp; appearance</a></li>
+        <li><a href="#en-6">Internet access</a></li>
+        <li><a href="#en-7">Google Play Billing (purchases)</a></li>
+        <li><a href="#en-8">No sharing, no tracking</a></li>
+        <li><a href="#en-9">Your rights</a></li>
+        <li><a href="#en-10">Right to lodge a complaint</a></li>
+        <li><a href="#en-11">Changes to this policy</a></li>
+        <li><a href="#en-imprint">Legal notice</a></li>
+      </ol>
+    </nav>
+
+    <section class="card" id="en-1">
+      <h2><span class="num">01</span> Controller</h2>
+      <p>The controller responsible for data processing under the General Data Protection
+      Regulation (GDPR) is:</p>
+      <table class="contact">
+        <tr><td>Provider</td><td>IT Westfalen Akademie</td></tr>
+        <tr><td>Address</td><td>Paschestraße 16, 58089 Hagen, Germany</td></tr>
+        <tr><td>Contact person</td><td>Azlan Ainto</td></tr>
+        <tr><td>Email</td><td>azlanainto64bit@outlook.de</td></tr>
+        <tr><td>Phone</td><td>+49 1782556210</td></tr>
+      </table>
+    </section>
+
+    <section class="card" id="en-2">
+      <h2><span class="num">02</span> Overview: what data does the app process?</h2>
+      <p>QrCodeStudio is deliberately built to minimize data collection:
+      <strong>scanned and generated barcode content never leaves your device</strong> and is never
+      transmitted to any server operated by IT Westfalen Akademie. The app does not run a backend
+      server of its own. Data processing only happens in the following, clearly scoped cases:</p>
+      <ul>
+        <li>locally on your device (camera image analysis, language setting, appearance),</li>
+        <li>directly between your device and a destination website you actively choose to open (download feature),</li>
+        <li>between your device and Google (in-app purchases via Google Play Billing).</li>
+      </ul>
+    </section>
+
+    <section class="card" id="en-3">
+      <h2><span class="num">03</span> Camera &amp; barcode/QR scanning</h2>
+      <p><span class="pill">local</span> Scanning QR codes and barcodes requires camera access (the
+      Android <code>CAMERA</code> permission). Camera frames are analyzed for codes in real time,
+      exclusively on your device. <strong>No camera images are stored, modified, or transmitted to
+      IT Westfalen Akademie.</strong> If a scanned code itself contains personal data (e.g. a digital
+      business card), that data also stays on your device until you choose to act on it (e.g. save a
+      contact, open a link).</p>
+      <p class="muted">Without camera permission, "Choose image" still works to read a code from an
+      existing image file.</p>
+    </section>
+
+    <section class="card" id="en-4">
+      <h2><span class="num">04</span> Generated barcodes &amp; local storage</h2>
+      <p><span class="pill">local</span> Barcodes/QR codes you create are saved to your device's
+      public Pictures folder (subfolder "QrCodeStudio") or shared via your operating system's native
+      share sheet — only when you explicitly choose to. Both happen entirely through your own action,
+      without any involvement of an IT Westfalen Akademie server.</p>
+    </section>
+
+    <section class="card" id="en-5">
+      <h2><span class="num">05</span> Language &amp; appearance</h2>
+      <p><span class="pill">local</span> Your chosen display language and appearance
+      (light/dark/system) are stored only locally on your device (Android Preferences) and are never
+      transmitted.</p>
+    </section>
+
+    <section class="card" id="en-6">
+      <h2><span class="num">06</span> Internet access</h2>
+      <p><span class="pill">device-direct</span> If a scanned code contains a link, document, or
+      structured data and you actively choose to open or download it, the app establishes a direct,
+      encrypted (HTTPS) connection <strong>between your device and the provider of that address</strong> —
+      not to any IT Westfalen Akademie server. What data is processed there is determined by the
+      operator of that address; their own privacy policy applies. Only open unknown links, files, or
+      Wi-Fi suggestions if you trust the source of the code.</p>
+    </section>
+
+    <section class="card" id="en-7">
+      <h2><span class="num">07</span> Google Play Billing (in-app purchases)</h2>
+      <p><span class="pill">Google</span> Purchasing the full version is handled via Google Play
+      Billing. Payment data (e.g. payment method, billing address) is processed exclusively by
+      Google; IT Westfalen Akademie never receives or stores this data. Google only passes the
+      purchase status (active/inactive) to the app to unlock the full version. Google's own privacy
+      policy additionally applies:
+      <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">policies.google.com/privacy</a>.</p>
+    </section>
+
+    <section class="card" id="en-8">
+      <h2><span class="num">08</span> No sharing with third parties, no tracking</h2>
+      <p>The app currently contains <strong>no analytics, tracking, or advertising SDKs</strong> and
+      does not transmit usage data to third parties. Should this change in the future (e.g. by adding
+      crash reporting), this policy will be updated in advance and the Google Play Data safety
+      section adjusted accordingly.</p>
+    </section>
+
+    <section class="card" id="en-9">
+      <h2><span class="num">09</span> Your rights</h2>
+      <p>To the extent personal data is processed, you have the following rights under the GDPR:</p>
+      <ul>
+        <li>access to data held about you (Art. 15 GDPR),</li>
+        <li>rectification of inaccurate data (Art. 16 GDPR),</li>
+        <li>erasure (Art. 17 GDPR) and restriction of processing (Art. 18 GDPR),</li>
+        <li>data portability (Art. 20 GDPR),</li>
+        <li>objection to processing (Art. 21 GDPR).</li>
+      </ul>
+      <p>Because the app itself does not transmit personal data to, or store it at, IT Westfalen
+      Akademie, these rights are in practice rarely relevant here; for Google Play Billing requests,
+      please also contact Google directly.</p>
+    </section>
+
+    <section class="card" id="en-10">
+      <h2><span class="num">10</span> Right to lodge a complaint</h2>
+      <p>You have the right to lodge a complaint with a data protection supervisory authority. The
+      authority competent for the provider's location (Hagen, North Rhine-Westphalia, Germany) is:</p>
+      <table class="contact">
+        <tr><td>Authority</td><td>Landesbeauftragte für Datenschutz und Informationsfreiheit Nordrhein-Westfalen (LDI NRW)</td></tr>
+        <tr><td>Address</td><td>Kavalleriestraße 2–4, 40213 Düsseldorf, Germany</td></tr>
+        <tr><td>Web</td><td>www.ldi.nrw.de</td></tr>
+      </table>
+    </section>
+
+    <section class="card" id="en-11">
+      <h2><span class="num">11</span> Changes to this policy</h2>
+      <p>This privacy policy will be updated as needed when the app or applicable legal requirements
+      change. The version published here at any given time applies.</p>
+    </section>
+
+    <section class="card" id="en-imprint">
+      <h2><span class="num">§5</span> Legal notice</h2>
+      <p class="muted">Information pursuant to § 5 of the German Digital Services Act (DDG)</p>
+      <table class="contact">
+        <tr><td>Provider</td><td>IT Westfalen Akademie</td></tr>
+        <tr><td>Address</td><td>Paschestraße 16, 58089 Hagen, Germany</td></tr>
+        <tr><td>Represented by</td><td>Azlan Ainto</td></tr>
+        <tr><td>Email</td><td>azlanainto64bit@outlook.de</td></tr>
+        <tr><td>Phone</td><td>+49 1782556210</td></tr>
+      </table>
+    </section>
+
+  </div>
+
+  <footer>
+    QrCodeStudio · IT Westfalen Akademie · <span id="footStamp">Stand 22.09.2026</span>
+  </footer>
+
+</div>
+
+<script>
+(function(){
+  var deBtn = document.getElementById('btnDe');
+  var enBtn = document.getElementById('btnEn');
+  var deSec = document.getElementById('de');
+  var enSec = document.getElementById('en');
+  var deNote = document.getElementById('draftNoteDe');
+  var enNote = document.getElementById('draftNoteEn');
+  var title = document.getElementById('page-title');
+  var sub = document.getElementById('page-sub');
+
+  function setLang(lang){
+    var isDe = lang !== 'en';
+    deSec.hidden = !isDe; enSec.hidden = isDe;
+    deNote.hidden = !isDe; enNote.hidden = isDe;
+    deBtn.setAttribute('aria-pressed', String(isDe));
+    enBtn.setAttribute('aria-pressed', String(!isDe));
+    title.textContent = isDe ? 'Datenschutzerklärung' : 'Privacy Policy';
+    sub.textContent = isDe ? 'QrCodeStudio – App von IT Westfalen Akademie' : 'QrCodeStudio – an app by IT Westfalen Akademie';
+    document.documentElement.lang = isDe ? 'de' : 'en';
+    try { localStorage.setItem('qcs-legal-lang', isDe ? 'de' : 'en'); } catch(e) {}
+  }
+
+  deBtn.addEventListener('click', function(){ setLang('de'); });
+  enBtn.addEventListener('click', function(){ setLang('en'); });
+
+  var saved = null;
+  try { saved = localStorage.getItem('qcs-legal-lang'); } catch(e) {}
+  if (saved === 'en') setLang('en');
+})();
+</script>
